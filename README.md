@@ -18,7 +18,7 @@ A [opencode](https://opencode.ai) TUI plugin to migrate sessions between project
 ### npm
 
 ```sh
-opencode plugin opencode-session-migrate
+opencode plugin -g opencode-session-migrate
 ```
 
 Or add it to your `tui.json`:
