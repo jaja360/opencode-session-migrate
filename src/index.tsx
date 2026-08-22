@@ -1,5 +1,6 @@
 /** @jsxImportSource @opentui/solid */
 import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@opencode-ai/plugin/tui"
+import { Show } from "solid-js"
 import { Database } from "bun:sqlite"
 import fs from "node:fs"
 import os from "node:os"
@@ -136,27 +137,38 @@ function DialogSessionMigrate(props: {
 }) {
   const api = props.api
   const DialogSelect = api.ui.DialogSelect
+  const theme = api.theme.current
 
   const options = props.sessions.map((s) => ({
     title: s.title,
     value: s.id,
     description: s.directory,
-    footer: props.orphans.has(s.id) ? `! orphan - ${formatTime(s.time.updated)}` : formatTime(s.time.updated),
+    footer: formatTime(s.time.updated),
     category: props.projectNames.get(s.projectID) ?? s.projectID,
+    gutter: props.orphans.has(s.id) ? () => <text fg={theme.warning}>!</text> : undefined,
   }))
 
   return (
-    <DialogSelect
-      title="Migrate Session"
-      placeholder="Search sessions"
-      options={options}
-      onSelect={(option) => {
-        debugLog("DialogSessionMigrate.onSelect:", option.value)
-        const session = props.sessions.find((s) => s.id === option.value)
-        if (!session) return
-        void openRescueDialog(api, session)
-      }}
-    />
+    <box>
+      <DialogSelect
+        title="Migrate Session"
+        placeholder="Search sessions"
+        options={options}
+        onSelect={(option) => {
+          debugLog("DialogSessionMigrate.onSelect:", option.value)
+          const session = props.sessions.find((s) => s.id === option.value)
+          if (!session) return
+          void openRescueDialog(api, session)
+        }}
+      />
+      <Show when={props.orphans.size > 0}>
+        <box paddingLeft={4} paddingRight={4} paddingBottom={1}>
+          <text fg={theme.textMuted}>
+            NOTE: <span style={{ fg: theme.warning }}>!</span> means the session is orphan
+          </text>
+        </box>
+      </Show>
+    </box>
   )
 }
 
