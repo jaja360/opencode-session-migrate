@@ -72,15 +72,26 @@ function isOrphan(session: SessionInfo, projects: ProjectInfo[]): boolean {
   return false
 }
 
+// Converts a filesystem path to OpenCode's on-disk storage form. OpenCode's
+// path type stores forward slashes even on Windows (e.g. "C:/foo/bar"), but
+// raw filesystem paths on win32 use backslashes ("C:\foo\bar"). Direct SQLite
+// writes bypass OpenCode's path type, so we must normalize here to match what
+// /sessions compares against. No-op on non-win32 platforms.
+export function toStoragePath(p: string, platform: NodeJS.Platform = process.platform): string {
+  if (platform !== "win32") return p
+  return p.replace(/\\/g, "/")
+}
+
 function migrate(sessionID: string, projectID: string, directory: string): void {
+  const storageDirectory = toStoragePath(directory)
   const db = new Database(dbPath(), { readwrite: true })
   try {
     const set = "project_id = ?, directory = ?, path = NULL, workspace_id = NULL"
     const update = db.prepare(`UPDATE session SET ${set} WHERE id = ?`)
     const updateChildren = db.prepare(`UPDATE session SET ${set} WHERE parent_id = ?`)
     db.transaction(() => {
-      update.run(projectID, directory, sessionID)
-      updateChildren.run(projectID, directory, sessionID)
+      update.run(projectID, storageDirectory, sessionID)
+      updateChildren.run(projectID, storageDirectory, sessionID)
     })()
   } finally {
     db.close()

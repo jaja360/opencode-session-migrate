@@ -12,7 +12,7 @@
     "./tui": "./src/index.tsx"
   },
   "files": [
-    "src"
+    "src/index.tsx"
   ],
   "engines": {
     "opencode": "^1.18.0"
@@ -26,7 +26,8 @@
     "orphan"
   ],
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
   },
   "dependencies": {
     "@opencode-ai/plugin": ">=1.18.0",
