@@ -1,6 +1,6 @@
 {
   "name": "opencode-session-migrate",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "type": "module",
   "license": "MIT",
   "description": "opencode TUI plugin to migrate (re-parent) sessions across projects and rescue orphaned sessions",

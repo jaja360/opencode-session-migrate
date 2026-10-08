@@ -184,7 +184,7 @@ export default Plugin.define({
     if (context.options.enabled === false) return
 
     debug = context.options.debug === true
-    const key = typeof context.options.keybind === "string" ? context.options.keybind : "ctrl+o"
+    const key = typeof context.options.keybind === "string" ? context.options.keybind : "alt+m"
     debugLog("plugin: init", `keybind=${key}`)
 
     context.keymap.layer(() => ({

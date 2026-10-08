@@ -5,7 +5,7 @@
       "package": "opencode-session-migrate",
       "options": {
         "enabled": true,
-        "keybind": "ctrl+o",
+        "keybind": "alt+m",
         "debug": false
       }
     }

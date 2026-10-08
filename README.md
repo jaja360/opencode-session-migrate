@@ -38,7 +38,7 @@ To configure options, use the object form:
   "plugins": [
     {
       "package": "opencode-session-migrate",
-      "options": { "enabled": true, "keybind": "ctrl+o", "debug": false }
+      "options": { "enabled": true, "keybind": "alt+m", "debug": false }
     }
   ]
 }
@@ -50,15 +50,17 @@ Restart opencode after changing your config.
 
 ## Usage
 
-- Press `ctrl+o` anywhere, or run `/migrate` (or find "Migrate sessions" in the command palette).
+- Press `alt+m` anywhere, or run `/migrate` (or find "Migrate sessions" in the command palette).
 - Pick a session, then a destination: the current project, your home directory, or any other project.
+
+> `alt+m` ("M" for *Migrate*) is the default because OpenCode v2 already uses `ctrl+o` for its built-in "open menu".
 
 ## Options
 
 | Option    | Type    | Default    | Description                                              |
 |-----------|---------|------------|----------------------------------------------------------|
 | `enabled` | boolean | `true`     | Set to `false` to disable the plugin.                    |
-| `keybind` | string  | `"ctrl+o"` | Key binding that opens the migrate dialog.               |
+| `keybind` | string  | `"alt+m"`  | Key binding that opens the migrate dialog.               |
 | `debug`   | boolean | `false`    | Write debug logs to `/tmp/opencode-session-migrate.log`. |
 
 ## How it works
@@ -69,7 +71,7 @@ Restart opencode after changing your config.
 ## Limitations
 
 - The built-in select does not support a colored gutter, so orphaned sessions are marked with a leading `!` in the title.
-- The `ctrl+o` hint does not appear in the built-in session list footer (the plugin API does not allow extending it). Use the command palette or `/migrate` if you forget the binding.
+- The `alt+m` hint does not appear in the built-in session list footer (the plugin API does not allow extending it). Use the command palette or `/migrate` if you forget the binding.
 
 ## License
 
