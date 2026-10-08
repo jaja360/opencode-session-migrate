@@ -11,37 +11,40 @@ A [opencode](https://opencode.ai) TUI plugin to migrate sessions between project
 
 ## Requirements
 
-- opencode `>=1.18.0` (TUI plugin API)
+- opencode `>=2.0.0` (CLI plugin API)
 
 ## Installation
 
-### npm
+### CLI plugin
 
 ```sh
-opencode plugin -g opencode-session-migrate
+opencode plugin add opencode-session-migrate
 ```
 
-Or add it to your `tui.json`:
+Alternatively, add the package to `cli.json` (global config at `~/.config/opencode/cli.json`, or `$XDG_CONFIG_HOME/opencode/cli.json`):
 
 ```json
 {
-  "$schema": "https://opencode.ai/tui.json",
-  "plugin": ["opencode-session-migrate"]
+  "$schema": "https://opencode.ai/cli.json",
+  "plugins": ["opencode-session-migrate"]
 }
 ```
 
-### Local path
-
-Point directly at the plugin file:
+To configure options, use the object form:
 
 ```json
 {
-  "$schema": "https://opencode.ai/tui.json",
-  "plugin": [
-    ["/path/to/opencode-session-migrate/src/index.tsx", { "keybind": "ctrl+o" }]
+  "$schema": "https://opencode.ai/cli.json",
+  "plugins": [
+    {
+      "package": "opencode-session-migrate",
+      "options": { "enabled": true, "keybind": "ctrl+o", "debug": false }
+    }
   ]
 }
 ```
+
+See the [CLI plugins documentation](https://opencode.ai/v2/docs/cli/plugins) for configuration details.
 
 Restart opencode after changing your config.
 
@@ -60,12 +63,12 @@ Restart opencode after changing your config.
 
 ## How it works
 
-- Orphans are detected client-side by checking whether each session's `directory` still exists on disk, or whether a global session's directory lives inside a known project worktree.
-- Migration updates `project_id` and `directory` (and clears `path`/`workspace_id`) directly in the opencode SQLite database, including child sessions.
+- Sessions across projects are listed through the V2 API. Orphans are detected client-side by checking whether each session's directory still exists on disk, or whether a global session's directory lives inside a known project canonical directory.
+- Migration uses the native `session.move` endpoint (`POST /api/session/{sessionID}/move`) rather than writing directly to SQLite. Child sessions are moved too, and migration refreshes the session and project caches.
 
 ## Limitations
 
-- Migration writes straight to the database, bypassing opencode's event system. The built-in session list may stay stale until a resync or restart; the plugin re-lists correctly on its own.
+- The built-in select does not support a colored gutter, so orphaned sessions are marked with a leading `!` in the title.
 - The `ctrl+o` hint does not appear in the built-in session list footer (the plugin API does not allow extending it). Use the command palette or `/migrate` if you forget the binding.
 
 ## License
