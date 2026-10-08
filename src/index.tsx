@@ -100,22 +100,18 @@ async function openMigrateDialog(context: PluginContext): Promise<void> {
     if (!current && locationDirectory) {
       current = projects.find((project) => project.canonical === locationDirectory)
     }
-    if (!current) {
-      context.ui.toast.show({
-        variant: "error",
-        title: "Migration failed",
-        message: "Could not determine the current project.",
-      })
-      return
-    }
+
+    const currentDestination = current
+      ? {
+          title: current.name || current.canonical,
+          value: { directory: locationDirectory ?? current.canonical },
+          description: locationDirectory ?? current.canonical,
+          category: "Current",
+        }
+      : undefined
 
     const destinations: Array<{ title: string; value: { directory: string }; description?: string; category?: string }> = [
-      {
-        title: current.name || current.canonical,
-        value: { directory: locationDirectory ?? current.canonical },
-        description: locationDirectory ?? current.canonical,
-        category: "Current",
-      },
+      ...(currentDestination ? [currentDestination] : []),
       {
         title: "Home (~)",
         value: { directory: os.homedir() },
