@@ -13,6 +13,27 @@ A [opencode](https://opencode.ai) TUI plugin to migrate sessions between project
 
 - opencode `>=2.0.0` (CLI plugin API)
 
+## OpenCode v1
+
+The `1.x` line targets the OpenCode v2 plugin API and is **not compatible with OpenCode v1**. The last release supporting OpenCode v1 is **0.2.1**.
+
+If you are still on OpenCode v1, install that exact version:
+
+```sh
+opencode plugin -g opencode-session-migrate@0.2.1
+```
+
+Or pin it in your `tui.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "plugin": ["opencode-session-migrate@0.2.1"]
+}
+```
+
+Pin the exact version. OpenCode only checks *unpinned* packages for updates and skips exact npm versions when updating, so `@0.2.1` will not drift to `latest` (`1.x`, which requires OpenCode v2). An unpinned entry, on the other hand, resolves to `latest`.
+
 ## Installation
 
 ### CLI plugin
